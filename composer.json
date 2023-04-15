@@ -1,0 +1,10 @@
+{
+    "require": {
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.6",
+        "slim/http": "^0.4.0",
+        "illuminate/database": "^10.7",
+        "php-di/php-di": "^7.0",
+        "symfony/yaml": "^6.2"
+    }
+}
