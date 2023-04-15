@@ -8,6 +8,8 @@ services:
     volumes:
       - ../app:/var/www/app
     restart: always
+    networks:
+      - shared_net
 
   nginx:
     image: nginx:1.19
@@ -19,9 +21,16 @@ services:
     depends_on:
       - worker
     restart: always
+    networks:
+      - shared_net
 
   sqlite-db:
     image: keinos/sqlite3
     volumes:
       - ../app/database:/root/db
     restart: always
+    networks:
+      - shared_net
+
+networks:
+  shared_net:
