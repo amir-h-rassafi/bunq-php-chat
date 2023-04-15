@@ -16,11 +16,8 @@ WORKDIR /var/www/app
 
 COPY composer.json .
 
-RUN ls 
-
-
-
 # Install PHP dependencies
 RUN composer update
+RUN composer install
 
 EXPOSE 9000

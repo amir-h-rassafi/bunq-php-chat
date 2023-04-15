@@ -4,11 +4,14 @@ Create simple chat app with php.
 ### It is so simple, without any Auth, any Websocket, any Status management!
 
 
-## How to run?
+## How to install?
 
 ```
-docker-compose up -d
+chmod +x install.sh
+./install.sh
 ```
+
+now you have it on http://localhost:8000
 
 
 ## API
