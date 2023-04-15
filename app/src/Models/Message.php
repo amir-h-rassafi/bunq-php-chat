@@ -1,7 +1,12 @@
 <?php
 namespace App\Models;
 
-class ChatUser extends BaseModel
+class Message extends BaseModel
 {
     protected $table = 'messages';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

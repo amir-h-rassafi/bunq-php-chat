@@ -15,9 +15,9 @@ docker-compose up -d
 
 ### ADD USER
 ```
-curl http://localhost:8000/users/add?username={USER_NAME}
+curl http://localhost:8000/user/add?username={USER_NAME}
 ```
 ### LIST USERS
 ```
-curl http://localhost:8000/users/list?count={COUNT}
+curl http://localhost:8000/user/list?count={COUNT}
 ```

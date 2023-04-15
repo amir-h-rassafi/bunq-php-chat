@@ -8,6 +8,7 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Services\UserChatManager;
 
 return function (App $app) {
     $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
@@ -18,7 +19,7 @@ return function (App $app) {
     //we need to authorization
 
     //user management
-    $app->get('/users/list', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/user/list', function (Request $request, Response $response, array $args) use ($app) {
         
         $count = $request->getQueryParams()['count'] ?? null;
         if (empty($count)) {
@@ -30,7 +31,7 @@ return function (App $app) {
         return $response;
     });
 
-    $app->get('/users/add', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/user/add', function (Request $request, Response $response, array $args) use ($app) {
 
         $username = $request->getQueryParams()['username'];
         
@@ -41,22 +42,31 @@ return function (App $app) {
         return $response;
     });
 
-    $app->post('/messages/{user-id}/send/{to-user-id}', function (Request $request, Response $response, array $args) use ($app) {
-
+    $app->post('/user/{id}/send/{peer-id}', function (Request $request, Response $response, array $args) use ($app) {
+        $creatorId = $args['id'];
+        $peerId = $args['peer-id'];
+        $text = json_decode($request->getBody(), true)['text'];
+        
+        $message = (new UserChatManager($creatorId, $app->getContainer()->get('db')))->sendMessage($peerId, $text);
+        $response->getBody()->write(json_encode(["status" => "Success"]));
+        
+        return $response;
     });
 
-
-    $app->post('/chat/{user-id}/send/{to-chat-id}', function (Request $request, Response $response, array $args) use ($app) {
-
+    $app->get('/user/{id}/chats', function (Request $request, Response $response, array $args) use ($app) {
+        $userId = $args['id'];
+        $count = $request->getQueryParams()['count'] ?? 100;
+        $chats = (new UserChatManager($userId, $app->getContainer()->get('db')))->getChatsJson($count);
+        $response->getBody()->write($chats);
+        return $response;
     });
 
-    //polling a chat session messages
-    $app->get('/chat/{chat-id}', function (Request $request, Response $response, array $args) use ($app) {
-
-    });
-
-    $app->get('/chat/{user-id}/list', function (Request $request, Response $response, array $args) use  ($app) {
-    
+    $app->get('/chat/{id}', function (Request $request, Response $response, array $args) use  ($app) {
+        $chatId = $args['id'];
+        $count = $request->getQueryParams()['count'] ?? 100;
+        $messages = (new UserChatManager(null, $app->getContainer()->get('db')))->getChatMessages($chatId, $count);
+        $response->getBody()->write($messages);
+        return $response;
     });
 
 };
