@@ -9,10 +9,14 @@ use Slim\Routing\RouteCollectorProxy;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserChatManager;
+use Parsedown;
 
 return function (App $app) {
     $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
-        $response->getBody()->write(json_encode(["Hello"=>"World - Welcome to simple chat!"]));
+        $markdown = file_get_contents("/var/www/app/readme.md");
+        $parsedown = new Parsedown();
+        $html = $parsedown->text($markdown);
+        $response->getBody()->write($html);
         return $response;
     });
 

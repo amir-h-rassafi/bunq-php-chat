@@ -8,6 +8,7 @@ services:
     volumes:
       - ../app:/var/www/app
       - ../app/database:/var/www/app/database
+      
     restart: always
     networks:
       - shared_net
