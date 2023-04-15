@@ -21,9 +21,7 @@ services:
     restart: always
 
   sqlite-db:
-    build:
-      context: ..
-      dockerfile: env/sqlite.Dockerfile
+    image: keinos/sqlite3
     volumes:
-      - ../app/database:/var/db
+      - ../app/database:/root/db
     restart: always
