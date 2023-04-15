@@ -20,7 +20,7 @@ return function (App $app) {
     //user management
     $app->get('/users/list', function (Request $request, Response $response, array $args) use ($app) {
         
-        $count = $request->getQueryParams()['count'];
+        $count = $request->getQueryParams()['count'] ?? null;
         if (empty($count)) {
             $count = 5;
         }
@@ -46,7 +46,7 @@ return function (App $app) {
     });
 
 
-    $app->post('/messages/{user-id}/send/{to-chat-id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/chat/{user-id}/send/{to-chat-id}', function (Request $request, Response $response, array $args) use ($app) {
 
     });
 
