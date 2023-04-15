@@ -45,6 +45,11 @@ return function (App $app) {
 
     });
 
+
+    $app->post('/messages/{user-id}/send/{to-chat-id}', function (Request $request, Response $response, array $args) use ($app) {
+
+    });
+
     //polling a chat session messages
     $app->get('/chat/{chat-id}', function (Request $request, Response $response, array $args) use ($app) {
 
