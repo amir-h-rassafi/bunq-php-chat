@@ -5,16 +5,8 @@ namespace App\Repositories;
 use App\Models\User;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
-    private User $user;
-
-
-    public function __construct(DB $db)
-    {
-        User::$db = $db;
-    }
-
     public function getUserById($id): ?User
     {
         return User::find($id);
