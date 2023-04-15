@@ -1,4 +1,4 @@
 vendor/
-database/
 composer.lock
 tags
+db/

@@ -24,7 +24,8 @@ $container->set('db', function ($container) {
     $db = new DB;
     $db->addConnection([
         'driver' => $config['driver'],
-        'database' => str_replace('%base_path%', $container->get('config')['base_path'], $config['database']),
+        'database' => $container->get('config')['database']['path'],
+        'mode' => 666
     ]);
     $db->setAsGlobal();
     $db->bootEloquent();

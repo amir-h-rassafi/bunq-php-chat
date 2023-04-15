@@ -1,3 +1,3 @@
 database:
   driver: sqlite
-  database: '%base_path%/database/chat.db'
+  path: '/var/www/app/database/chat.db'

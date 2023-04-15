@@ -7,7 +7,7 @@ services:
       dockerfile: ../env/worker.Dockerfile
     volumes:
       - ../app:/var/www/app
-      - ../db:/db/
+      - ../app/database:/var/www/app/database
     restart: always
     networks:
       - shared_net

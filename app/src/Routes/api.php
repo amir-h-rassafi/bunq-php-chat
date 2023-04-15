@@ -1,26 +1,44 @@
 <?php
+
+namespace App\Routes;
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use App\Models\User;
+use App\Repositories\UserRepository;
 
 return function (App $app) {
-    $app->get('/', function (Request $request, Response $response, array $args) {
-        $response->getBody()->write("Welcome to the chat application!");
+    $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
+        $response->getBody()->write(json_encode(["Hello"=>"World - Welcome to simple chat!"]));
         return $response;
     });
 
-    $app->group('/api', function (RouteCollectorProxy $group) {
-        $group->get('/messages', function (Request $request, Response $response, array $args) {
-            // Your code here
+    //we need to authorization
 
-            return $response;
-        });
-
-        $group->post('/messages', function (Request $request, Response $response, array $args) {
-            // Your code here
-
-            return $response;
-        });
+    //user management
+    $app->get('/users/list/{count}', function (Request $request, Response $response, array $args) use ($app) {
+        $count = $args['count'];
+        $response->getBody()->write((new UserRepository($app->getContainer()->get('db')))->getUsersJson($count));
+        return $response;
     });
+
+    $app->post('/users/add', function (Request $request, Response $response, array $args) use ($app) {
+
+    });
+
+    $app->post('/messages/{user-id}/send/{to-user-id}', function (Request $request, Response $response, array $args) use ($app) {
+
+    });
+
+    //polling a chat session messages
+    $app->get('/chat/{chat-id}', function (Request $request, Response $response, array $args) use ($app) {
+
+    });
+
+    $app->get('/chat/{user-id}/list', function (Request $request, Response $response, array $args) use  ($app) {
+    
+    });
+
 };
