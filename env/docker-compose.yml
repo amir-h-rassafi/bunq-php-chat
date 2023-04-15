@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  worker:
+    build:
+      context: ../app
+      dockerfile: ../env/worker.Dockerfile
+    volumes:
+      - ../app:/var/www/app
+    restart: always
+
+  nginx:
+    image: nginx:1.19
+    ports:
+      - "8000:80"
+    volumes:
+      - ../app/public:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - worker
+    restart: always
+
+  sqlite-db:
+    build:
+      context: ..
+      dockerfile: env/sqlite.Dockerfile
+    volumes:
+      - ../app/database:/var/db
+    restart: always
