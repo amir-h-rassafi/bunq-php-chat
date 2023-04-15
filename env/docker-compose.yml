@@ -7,6 +7,7 @@ services:
       dockerfile: ../env/worker.Dockerfile
     volumes:
       - ../app:/var/www/app
+      - ../db:/db/
     restart: always
     networks:
       - shared_net
@@ -20,14 +21,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - worker
-    restart: always
-    networks:
-      - shared_net
-
-  sqlite-db:
-    image: keinos/sqlite3
-    volumes:
-      - ../app/database:/root/db
     restart: always
     networks:
       - shared_net
