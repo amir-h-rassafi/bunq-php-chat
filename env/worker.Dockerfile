@@ -18,6 +18,5 @@ COPY composer.json .
 
 # Install PHP dependencies
 RUN composer update
-RUN composer install
 
 EXPOSE 9000
