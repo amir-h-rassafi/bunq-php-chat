@@ -16,7 +16,9 @@ return function (App $app) {
         $markdown = file_get_contents("/var/www/app/readme.md");
         $parsedown = new Parsedown();
         $html = $parsedown->text($markdown);
-        $response->getBody()->write($html);
+        $template = file_get_contents("/var/www/app/public/template.html");
+        $output = str_replace("{{content}}", $html, $template);
+        $response->getBody()->write($output);
         return $response;
     });
 
