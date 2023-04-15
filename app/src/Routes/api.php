@@ -18,14 +18,27 @@ return function (App $app) {
     //we need to authorization
 
     //user management
-    $app->get('/users/list/{count}', function (Request $request, Response $response, array $args) use ($app) {
-        $count = $args['count'];
+    $app->get('/users/list', function (Request $request, Response $response, array $args) use ($app) {
+        
+        $count = $request->getQueryParams()['count'];
+        if (empty($count)) {
+            $count = 5;
+        }
+
         $response->getBody()->write((new UserRepository($app->getContainer()->get('db')))->getUsersJson($count));
+        
         return $response;
     });
 
-    $app->post('/users/add', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/users/add', function (Request $request, Response $response, array $args) use ($app) {
 
+        $username = $request->getQueryParams()['username'];
+        
+        $user = (new UserRepository($app->getContainer()->get('db')))->addUser($username);
+        
+        $response->getBody()->write($user->toJson());
+        
+        return $response;
     });
 
     $app->post('/messages/{user-id}/send/{to-user-id}', function (Request $request, Response $response, array $args) use ($app) {

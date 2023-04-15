@@ -19,6 +19,11 @@ class UserRepository extends BaseRepository
 
     public function addUser(string $username): User
     {
+        //todo add business exception
+        if (empty($username)) {
+            throw new \Exception('Empty username');
+        }
+        
         $user = new User;
         
         $user->username = $username;
