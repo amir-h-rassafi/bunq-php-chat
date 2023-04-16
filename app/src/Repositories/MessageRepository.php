@@ -28,7 +28,8 @@ class MessageRepository extends BaseRepository
         ->orderby('id', 'DESC')
         ->offset($pager->getOffset())
         ->limit($pager->size)
-        ->with('user')
+        ->with('sender')
+        ->with('chatMeta')
         ->get();
     }
 

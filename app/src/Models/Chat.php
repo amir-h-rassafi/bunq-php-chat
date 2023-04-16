@@ -6,4 +6,9 @@ namespace App\Models;
 class Chat extends BaseModel
 {
     protected $table = 'chats';
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_user_id')->select('id', 'username');
+    }
 }
