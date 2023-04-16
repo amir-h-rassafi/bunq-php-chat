@@ -12,6 +12,7 @@ chmod +x install.sh
 
 now you have it on http://localhost:8000
 
+_Run chmod +x sample.sh and ./sample.sh for a happy scenario_
 
 ## API
 
@@ -42,5 +43,5 @@ curl 'http://localhost:8000/user/{USER_ID}/chats'
 ### GET CHAT MESSAGES
 
 ```
-curl 'http://localhost:8000/chat/{USER_ID}'
+curl 'http://localhost:8000/chat/{CHAT_ID}'
 ```
