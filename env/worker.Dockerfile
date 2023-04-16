@@ -14,9 +14,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/app
 
-RUN npm install --save github-markdown-css
-
-
 COPY composer.json .
 
 # Install PHP dependencies
