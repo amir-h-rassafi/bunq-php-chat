@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use App\Utils\Pager;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserChatManager;
@@ -14,7 +15,16 @@ use Parsedown;
 //TODO review and LOCK for race conditions
 //FIX MODELS for better SOLID HANDLING
 
+function extractPager($queryParam): Pager {
+    $page = $queryParam['page'] ?? 1;
+    $count = $queryParam['count'] ?? 20;
+    return new Pager($page, $count);
+};
+
 return function (App $app) {
+
+
+
     $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
         $markdown = file_get_contents("/var/www/app/readme.md");
         $parsedown = new Parsedown();
@@ -30,12 +40,9 @@ return function (App $app) {
     //user management
     $app->get('/user/list', function (Request $request, Response $response, array $args) use ($app) {
         
-        $count = $request->getQueryParams()['count'] ?? null;
-        if (empty($count)) {
-            $count = 5;
-        }
+        $pager = extractPager($request->getQueryParams());
 
-        $response->getBody()->write((new UserRepository($app->getContainer()->get('db')))->getUsersJson($count));
+        $response->getBody()->write((new UserRepository($app->getContainer()->get('db')))->getUsersJson($pager));
         
         return $response;
     });

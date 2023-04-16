@@ -6,9 +6,6 @@ use App\Models\User;
 use App\Models\Chat;
 use App\Models\ChatUser;
 use App\Models\Message;
-
-// use Assert\Assertion;
-
 use App\Repositories\UserRepository;
 use App\Repositories\ChatRepository;
 use App\Repositories\MessageRepository;
@@ -20,43 +17,49 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class UserChatManager 
 {
-    private User $user;
+    private User $sender;
     private UserRepository $userRepository;
     private ChatRepository $chatRepository;
     private MessageRepository $messageRepository;
 
-    public function __construct(?int $userId, DB $db)
+    public function __construct(DB $db, ?int $senderUserId)
     {
         $this->userRepository = new UserRepository($db);
         $this->chatRepository = new ChatRepository($db);
         $this->messageRepository = new MessageRepository($db);
-        if ($userId) {
-            $this->user = $this->userRepository->getUserById($userId);
+        if ($senderUserId) {
+            $this->sender = $this->userRepository->getUserById($senderUserId);
         }
-        // Assertion::that($this->user)->notEmpty("User not found, plz create the user");
+    }
+
+    private function getChat(int $senderId, int $receiverId): Chat {
+
+        $chat = $this->chatRepository->getPeerChat($senderId, $receiverId);
+        
+        if (empty($chat)) {
+            $chat = $this->chatRepository->addChat($senderId, $receiverId);
+        }
+
+        return $chat;
     }
 
 
-    public function sendMessage(int $peerId, string $message)
+    public function sendMessage(int $receiverUserId, string $message)
     {
-        $chat = $this->chatRepository->getPeerChat($this->user->id, $peerId);
+        $chat = $this->getChat($this->sender->id, $receiverUserId);
 
-        if (empty($chat)) {
-            $chat = $this->chatRepository->addChat($this->user->id, $peerId);
-        }
-
-        $this->messageRepository->addMessage($this->user->id, $chat->id, $message);
-
+        $this->messageRepository->addMessage($this->sender->id, $chat->id, $message);
     }
 
     //todo add Pager for limit offset
-    public function getChatMessages($chatId, $count=100): string
+    public function getChatMessages($chatId, Pager $pager= null): string
     {
-        return $this->messageRepository->getMessagesJson($chatId, $count);
+
+        return $this->messageRepository->getMessagesJson($chatId, $pager);
     }
 
-    public function getChatsJson($count = 100): string
+    public function getChatsJson(Pager $pager= null): string
     {
-        return $this->chatRepository->getChatListJson($this->user->id, $count);
+        return $this->chatRepository->getChatListJson($this->user->id, $pager);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Illuminate\Database\Capsule\Manager as DB;
+use App\Utils\Pager;
 
 class UserRepository extends BaseRepository
 {
@@ -12,9 +13,9 @@ class UserRepository extends BaseRepository
         return User::find($id);
     }
 
-    public function getUsersJson($count): string
+    public function getUsersJson(Pager $pager): string
     {
-        return User::take($count)->get()->toJson();
+        return User::skip($pager->getOffset())->take($pager->size)->get()->toJson();
     }
 
     public function addUser(string $username): User
