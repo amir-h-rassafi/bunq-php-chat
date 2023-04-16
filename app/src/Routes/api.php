@@ -11,6 +11,9 @@ use App\Repositories\UserRepository;
 use App\Services\UserChatManager;
 use Parsedown;
 
+//TODO review and LOCK for race conditions
+//FIX MODELS for better SOLID HANDLING
+
 return function (App $app) {
     $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
         $markdown = file_get_contents("/var/www/app/readme.md");
