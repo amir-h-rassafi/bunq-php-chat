@@ -15,32 +15,32 @@ class ChatRepository extends BaseRepository
 
     public function getChatListJson(int $userId, int $count=100): string
     {
-        return Chat::where('creator_id', $userId)
-                    ->orWhere('peer_id', 1)
+        return Chat::where('sender_user_id', $userId)
+                    ->orWhere('receiver_user_id', $userId)
                     ->orderBy('updated_at', 'DESC')
                     ->limit($count)
                     ->get()
                     ->toJson();
     }
 
-    public function getPeerChat(int $creatorId, int $peerId): ?Chat
+    public function getChat(int $senderUserId, int $receiverUserId): ?Chat
     {
         return Chat::where(function ($query) use($creatorId, $peerId) {
-                        $query->where('creator_id', $creatorId)
-                            ->where('peer_id', $peerId);
+                        $query->where('sender_user_id', $senderUserId)
+                            ->where('receiver_user_id', $receiverUserId);
                     })
                     ->orWhere(function ($query) use($creatorId, $peerId) {
-                        $query->where('peer_id', $creatorId)
-                            ->where('creator_id', $peerId);
+                        $query->where('receiver_user_id', $senderUserId)
+                            ->where('sender_user_id', $receiverUserId);
                     })
                     ->get()->pop();
     }
 
-    public function addChat(int $creatorId, int $peerId): Chat
+    public function addChat(int $senderUserId, int $receiverUserId): Chat
     {
         $chat = new Chat;   
-        $chat->creator_id = $creatorId;
-        $chat->peer_id = $peerId;
+        $chat->sender_user_id = $senderUserId;
+        $chat->receiver_user_id = $receiverUserId;
         $chat->save();
         return $chat;
     }

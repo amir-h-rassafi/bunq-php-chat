@@ -22,7 +22,7 @@ class UserChatManager
     private ChatRepository $chatRepository;
     private MessageRepository $messageRepository;
 
-    public function __construct(DB $db, ?int $senderUserId)
+    public function __construct(DB $db, ?int $senderUserId = null)
     {
         $this->userRepository = new UserRepository($db);
         $this->chatRepository = new ChatRepository($db);
@@ -34,7 +34,7 @@ class UserChatManager
 
     private function getChat(int $senderId, int $receiverId): Chat {
 
-        $chat = $this->chatRepository->getPeerChat($senderId, $receiverId);
+        $chat = $this->chatRepository->getChat($senderId, $receiverId);
         
         if (empty($chat)) {
             $chat = $this->chatRepository->addChat($senderId, $receiverId);

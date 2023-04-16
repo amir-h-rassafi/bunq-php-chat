@@ -7,23 +7,23 @@ CREATE TABLE users (
 
 CREATE TABLE messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    sender_user_id INTEGER NOT NULL,
     chat_id INTEGER NOT NULL,
     message TEXT NOT NULL,
     updated_at DATETIME NOT NULL,
     created_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (sender_user_id) REFERENCES users (id)
     FOREIGN KEY (chat_id) REFERENCES chats (id)
 
 );
 
 CREATE TABLE chats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    creator_id INTEGER NOT NULL,
-    peer_id INTEGER NOT NULL,
+    sender_user_id INTEGER NOT NULL,
+    receiver_user_id INTEGER NOT NULL,
     updated_at DATETIME NOT NULL,
     created_at DATETIME NOT NULL,
-    FOREIGN KEY (creator_id) REFERENCES users (id),
-    FOREIGN KEY (peer_id) REFERENCES users (id),
-    UNIQUE (creator_id, peer_id)
+    FOREIGN KEY (sender_user_id) REFERENCES users (id),
+    FOREIGN KEY (receiver_user_id) REFERENCES users (id),
+    UNIQUE (sender_user_id, receiver_user_id)
 );

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Message;
 use Illuminate\Database\Capsule\Manager as DB;
+use App\Utils\Pager;
 
 class MessageRepository extends BaseRepository
 {
@@ -12,28 +13,30 @@ class MessageRepository extends BaseRepository
         return Message::find($id);
     }
 
-    public function getMessages(int $chatId, int $count)
+    public function getMessages(int $chatId, Pager $pager)
     {
         return Message::where('chat_id', '=', $chatId)
             ->orderby('id', 'DESC')
-            ->limit($count)
+            ->offset($pager->getOffset())
+            ->limit($pager->size)
             ->get();
     }
 
-    public function getMessagesJson(int $chatId, int $count)
+    public function getMessagesJson(int $chatId, Pager $pager)
     {
         return Message::where('chat_id', '=', $chatId)
         ->orderby('id', 'DESC')
-        ->limit($count)
+        ->offset($pager->getOffset())
+        ->limit($pager->size)
         ->with('user')
         ->get();
     }
 
-    public function addMessage(int $userId, int $chatId, string $messageText): Message
+    public function addMessage(int $senderUserId, int $chatId, string $messageText): Message
     {
         $message = new Message;
         
-        $message->user_id = $userId;
+        $message->sender_user_id = $senderUserId;
         $message->chat_id = $chatId;
         $message->message = $messageText;
 

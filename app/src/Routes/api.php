@@ -24,7 +24,7 @@ function extractPager($queryParam): Pager {
 return function (App $app) {
 
 
-
+    //run readme.md
     $app->get('/', function (Request $request, Response $response, array $args) use ($app) {
         $markdown = file_get_contents("/var/www/app/readme.md");
         $parsedown = new Parsedown();
@@ -58,12 +58,13 @@ return function (App $app) {
         return $response;
     });
 
-    $app->post('/user/{id}/send/{peer-id}', function (Request $request, Response $response, array $args) use ($app) {
-        $creatorId = $args['id'];
-        $peerId = $args['peer-id'];
+    $app->post('/user/{sender-id}/send/{receiver-id}', function (Request $request, Response $response, array $args) use ($app) {
+        
+        $senderId = $args['sender-id'];
+        $receiverId = $args['receiver-id'];
         $text = json_decode($request->getBody(), true)['text'];
         
-        $message = (new UserChatManager($creatorId, $app->getContainer()->get('db')))->sendMessage($peerId, $text);
+        $message = (new UserChatManager($app->getContainer()->get('db'), $senderId))->sendMessage($receiverId, $text);
         $response->getBody()->write(json_encode(["status" => "Success"]));
         
         return $response;
@@ -71,16 +72,16 @@ return function (App $app) {
 
     $app->get('/user/{id}/chats', function (Request $request, Response $response, array $args) use ($app) {
         $userId = $args['id'];
-        $count = $request->getQueryParams()['count'] ?? 100;
-        $chats = (new UserChatManager($userId, $app->getContainer()->get('db')))->getChatsJson($count);
+        $pager = extractPager($request->getQueryParams());
+        $chats = (new UserChatManager($app->getContainer()->get('db'), $userId))->getChatsJson($pager);
         $response->getBody()->write($chats);
         return $response;
     });
 
     $app->get('/chat/{id}', function (Request $request, Response $response, array $args) use  ($app) {
         $chatId = $args['id'];
-        $count = $request->getQueryParams()['count'] ?? 100;
-        $messages = (new UserChatManager(null, $app->getContainer()->get('db')))->getChatMessages($chatId, $count);
+        $pager = extractPager($request->getQueryParams());
+        $messages = (new UserChatManager($app->getContainer()->get('db')))->getChatMessages($chatId, $pager);
         $response->getBody()->write($messages);
         return $response;
     });
