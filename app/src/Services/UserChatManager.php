@@ -9,6 +9,7 @@ use App\Models\Message;
 use App\Repositories\UserRepository;
 use App\Repositories\ChatRepository;
 use App\Repositories\MessageRepository;
+use App\Utils\Pager;
 
 
 //it should wire or handle with traits
@@ -60,6 +61,6 @@ class UserChatManager
 
     public function getChatsJson(Pager $pager= null): string
     {
-        return $this->chatRepository->getChatListJson($this->user->id, $pager);
+        return $this->chatRepository->getChatListJson($this->sender->id, $pager);
     }
 }

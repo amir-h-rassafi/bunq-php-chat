@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Chat;
-
+use App\Utils\Pager;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class ChatRepository extends BaseRepository
@@ -13,23 +13,24 @@ class ChatRepository extends BaseRepository
         return Chat::find($id);
     }
 
-    public function getChatListJson(int $userId, int $count=100): string
+    public function getChatListJson(int $userId, Pager $pager): string
     {
         return Chat::where('sender_user_id', $userId)
                     ->orWhere('receiver_user_id', $userId)
                     ->orderBy('updated_at', 'DESC')
-                    ->limit($count)
+                    ->offset($pager->getOffset())
+                    ->limit($pager->size)
                     ->get()
                     ->toJson();
     }
 
     public function getChat(int $senderUserId, int $receiverUserId): ?Chat
     {
-        return Chat::where(function ($query) use($creatorId, $peerId) {
+        return Chat::where(function ($query) use($senderUserId, $receiverUserId) {
                         $query->where('sender_user_id', $senderUserId)
                             ->where('receiver_user_id', $receiverUserId);
                     })
-                    ->orWhere(function ($query) use($creatorId, $peerId) {
+                    ->orWhere(function ($query) use($senderUserId, $receiverUserId) {
                         $query->where('receiver_user_id', $senderUserId)
                             ->where('sender_user_id', $receiverUserId);
                     })

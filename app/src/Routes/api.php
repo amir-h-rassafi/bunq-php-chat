@@ -17,8 +17,8 @@ use Parsedown;
 
 function extractPager($queryParam): Pager {
     $page = $queryParam['page'] ?? 1;
-    $count = $queryParam['count'] ?? 20;
-    return new Pager($page, $count);
+    $size = $queryParam['size'] ?? 20;
+    return new Pager($page, $size);
 };
 
 return function (App $app) {
