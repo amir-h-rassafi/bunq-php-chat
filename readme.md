@@ -45,3 +45,9 @@ curl 'http://localhost:8000/user/{USER_ID}/chats'
 ```
 curl 'http://localhost:8000/chat/{CHAT_ID}'
 ```
+
+## Tests
+
+```
+./vendor/bin/phpunit
+```
