@@ -1,4 +1,4 @@
-# Bunq Task -- create simple chat app with php/slim.
+# Create simple chat app with php/slim.
 
 ### NOTE! It is so simple, without any Auth, any Websocket, any Status management!
 
